@@ -31,6 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  qr_flutter: ^4.0.0 #なるべく最新のものを使用してください
 
 
   # The following adds the Cupertino Icons font to your application.
