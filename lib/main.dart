@@ -12,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Machilabo Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
+        accentColor: Colors.limeAccent,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'まちラボへようこそ！'),
     );
   }
 }
@@ -70,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {_incrementCounter();},
               child: Text('背景色を指定したボタン'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, //ボタンの背景色
+                primary: Color.fromRGBO(255, 247, 153, 1), //ボタンの背景色
               ),
             ),
             // * ボタンを押した時に色が変わる --------------------------------------
