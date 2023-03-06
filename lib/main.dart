@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'QRread.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,8 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => {
                 print('ボタンが押された！'),
                 _incrementCounter(),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QRread(title: 'QR read')),
+                ),
               },
-              child: Text('ただのボタン'),
+              child: Text('QRコード読み取りのボタン'),
             ),
             ElevatedButton(
               onPressed: () {_incrementCounter();},
