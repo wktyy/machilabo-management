@@ -32,10 +32,55 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _admissionDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title :Text("来館ありがとうございます！"),
+        content: Text("Welcome to まちらぼ !"),
+      )
+    );
+  }
+  void _exitDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title :Text("ご利用ありがとうございました！"),
+        content: Text("See you !"),
+      )
+    );
+  }
+  void _firstDialog() {
+    showDialog(
+        context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text("まちラボをどこで知りましたか？"),
+          children: [
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text("webサイトやSNS"),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text("チラシやパンフレット"),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text("YouTubeなどの動画"),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text("たまたま立ち寄った"),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context),
+              child: Text("その他"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -58,70 +103,42 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () => {
-                print('ボタンが押された！'),
-                _incrementCounter(),
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => QRread(title: 'QR read')),
+                  MaterialPageRoute(builder: (context) => QRread(title: "")),
                 ),
               },
               child: Text('QRコード読み取りのボタン'),
             ),
             ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('背景色を指定したボタン'),
+              onPressed: () {_admissionDialog();},
+              child: Text('入館ボタン'),
               style: ElevatedButton.styleFrom(
                 primary: Color.fromRGBO(255, 247, 153, 1), //ボタンの背景色
               ),
             ),
-            // * ボタンを押した時に色が変わる --------------------------------------
             ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text(
-                '押した時赤になる',
-                style: TextStyle(color: Colors.white),
-              ),
+              onPressed: () {_exitDialog();},
+              child: Text('退館ボタン'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.green, //ボタンの背景色
-                onPrimary: Colors.red, // ボタンを押した時の色
+                primary: Color.fromRGBO(255, 247, 153, 1), //ボタンの背景色
               ),
             ),
-            // * ボタンに枠線を付ける ----------------------------------------------
             ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('枠線付きボタン'),
+              onPressed: () {_firstDialog();},
+              child: Text('はじめての方'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.purple, //ボタンの背景色
-                side: BorderSide(
-                  color: Colors.blue, // 枠線の色
-                  width: 5, // 枠線の太さ
-                ),
+                primary: Color.fromRGBO(255, 247, 153, 1), //ボタンの背景色
               ),
-            ),
-            // * .styleFromコンストラクタでサイズ変更 -----------------------------------------
-            ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('.styleFromコンストラクタでサイズ変更'),
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(250, 100), // サイズ変更
-                primary: Colors.pink,
-              ),
-            ),
-            // * .iconコンストラクタ ------------------------------------------------
-            // アイコン付きのボタンを作成できる
-            ElevatedButton.icon(
-              onPressed: () {_incrementCounter();},
-              icon: Icon(Icons.settings), // 表示するアイコン
-              label: Text('.iconコンストラクタ'),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+      /*floatingActionButton: FloatingActionButton(
+        onPressed: (){},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), // This trailing comma makes auto-formatting nicer for build methods.*/
     );
   }
 }

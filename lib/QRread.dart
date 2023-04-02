@@ -33,11 +33,14 @@ class _QRreadState extends State<QRread> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
+          SizedBox(
+            width: 400,
+            height: 400,
+            child: Center(
+              child: QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+              ),
             ),
           ),
           Expanded(
@@ -57,8 +60,8 @@ class _QRreadState extends State<QRread> {
           await controller?.flipCamera();
           setState(() {});
         },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        tooltip: '',
+        child: const Icon(Icons.camera),
       ),
     );
   }
