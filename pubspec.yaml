@@ -2,6 +2,9 @@ name: myapp
 description: A new Flutter project.
 version: 1.0.0+1
 
+dependency_overrides:
+  path_provider_android: 2.0.11
+
 environment:
   sdk: ">=2.1.0 <3.0.0"
 

@@ -1,98 +1,58 @@
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(Buil//非同期処理用ライブラリ
-import 'dart:async';
-//ファイル出力用ライブラリ
-import 'dart:io';
+import 'dart:async'; //非同期処理用ライブラリ
+import 'dart:io';  //ファイル出力用ライブラリ
+import 'package:path_provider/path_provider.dart'; //アプリがファイルを保存可能な場所を取得するライブラリ
 
 import 'package:flutter/material.dart';
-//アプリがファイルを保存可能な場所を取得するライブラリ
-import 'package:path_provider/path_provider.dart';
-
-//テキストフィールドの状態を管理するためのクラス
-final _textController = TextEditingController();
-//出力するテキストファイル名
-final _fileName = 'editTextField.txt';
 
 void main() => runApp(MyApp());
 
-//ステートレス
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter ファイル 出力テスト',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: 'otameshi',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('OutputTest'),
+        ),
+        body: OutputTest(),
       ),
-      home: MyHomePage(title: 'Flutter ファイル 出力テスト'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+class OutputTest extends StatefulWidget{
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _OutputTestState createState() => new _OutputTestState();
 }
 
-//ステートフル
-class _MyHomePageState extends State<MyHomePage> {
-  //読み込んだテキストファイルを出力
-  String _out = '';
+class _OutputTestState extends State<OutputTest>{
 
-  //ファイルの出力処理
-  void outButton() async {
-    getFilePath().then((File file) {
-      file.writeAsString(_textController.text);
+  // 入力された内容を保持するコントローラ
+  final outputController = TextEditingController();
+
+  // 表示用の変数
+  String inputText = "0回、出力しました";
+  int inputNum = 0;
+
+  // 「ファイルに出力する」が押されたときの処理
+  void output(String s) async{
+    setState(() {
+      ++inputNum;
+      inputText = "" + inputNum.toString() + "回、出力しました";
+    });
+    
+    getFilePath().then((File file) { //thenの記述で非同期処理であるgetFilePath関数の処理を待っている
+      file.writeAsString(s);
     });
   }
 
   //ファイルの読み込みと変数への格納処理
-  void loadButton() async {
+  void loadFile() async {
     setState(() {
       load().then((String value) {
         setState(() {
-          _out = value;
+          inputText = value;
         });
       });
     });
@@ -100,136 +60,61 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('テキストを入力してください'),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: TextField(
-                autofocus: true,
-                controller: _textController,
-                decoration: InputDecoration(icon: Icon(Icons.arrow_forward)),
-              ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        // Column1
+        Container(
+          alignment: Alignment.center,
+          child: Container(
+            width: 300,
+            height: 100,
+            child: TextField(
+              enabled: true, //活性or非活性
+              maxLength: 10, //入力最大文字数
+              style: TextStyle(color: Colors.red), //入力文字のスタイル
+              obscureText: false, //trueでマスク（****表記）にする
+              maxLines:1, //入力可能行数
+              controller: outputController,
             ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //ファイル出力用のボタン(ボタン押下でoutButtonメソッドを呼び出し)
-              child:RaisedButton(child: Text('ファイルに出力する'), onPressed: outButton),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              //ファイル読み込み用のボタン(ボタン押下でloadButtonメソッドを呼び出し)
-              child: RaisedButton(
-                  child: Text('出力したファイルを読み込む'), onPressed: loadButton),
-            ),
-            Padding(
-                padding: EdgeInsets.all(10.0),
-                //読み込みだファイルの内容を表示
-                child: Text(
-                  '出力したファイルの内容は「' + _out + '」です！',
-                )),
-          ],
+          )
         ),
-      ),
+
+        // Column2
+        GestureDetector(
+          onTap: () {
+            output(outputController.text);
+          },
+          child: Text("ファイルに出力する"),
+        ),
+
+        // Column3
+        GestureDetector(
+          onTap: () {
+            loadFile();
+          },
+          child: Text("ファイルを読み込む"),
+        ),
+
+        // Column4
+        Text(inputText),
+
+      ],
     );
   }
 }
 
+
+
 //テキストファイルを保存するパスを取得する
-Future<File> getFilePath() async {
-  final directory = await getTemporaryDirectory();
-  return File(directory.path + '/' + _fileName);
+Future<File> getFilePath() async { //Future<T> 関数名 asyncで<T>クラスを扱いとする非同期処理をする関数。非同期処理は、実行されると、その終了を待たずに他の処理が実行されます。関数内に１つでも非同期処理が実行される場合は非同期関数となります。
+  final directory = await getTemporaryDirectory(); //await はその処理が終わるまで待つということ
+  debugPrint(directory.path);
+  return File(directory.path + '/test.txt');
 }
 
 //テキストファイルの読み込み
 Future<String> load() async {
   final file = await getFilePath();
   return file.readAsString();
-}dContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            ElevatedButton(
-              onPressed: () => {
-                print('ボタンが押された！'),
-                _incrementCounter(),
-              },
-              child: Text('ただのボタン'),
-            ),
-            ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('背景色を指定したボタン'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red, //ボタンの背景色
-              ),
-            ),
-            // * ボタンを押した時に色が変わる --------------------------------------
-            ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text(
-                '押した時赤になる',
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green, //ボタンの背景色
-                onPrimary: Colors.red, // ボタンを押した時の色
-              ),
-            ),
-            // * ボタンに枠線を付ける ----------------------------------------------
-            ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('枠線付きボタン'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.purple, //ボタンの背景色
-                side: BorderSide(
-                  color: Colors.blue, // 枠線の色
-                  width: 5, // 枠線の太さ
-                ),
-              ),
-            ),
-            // * .styleFromコンストラクタでサイズ変更 -----------------------------------------
-            ElevatedButton(
-              onPressed: () {_incrementCounter();},
-              child: Text('.styleFromコンストラクタでサイズ変更'),
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(250, 100), // サイズ変更
-                primary: Colors.pink,
-              ),
-            ),
-            // * .iconコンストラクタ ------------------------------------------------
-            // アイコン付きのボタンを作成できる
-            ElevatedButton.icon(
-              onPressed: () {_incrementCounter();},
-              icon: Icon(Icons.settings), // 表示するアイコン
-              label: Text('.iconコンストラクタ'),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
 }
