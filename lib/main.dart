@@ -7,6 +7,8 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 void main() => runApp(const MaterialApp(home: QRViewExample()));
 
+var now = DateTime.now();
+
 class MyHome extends StatelessWidget {
   const MyHome({Key? key}) : super(key: key);
 
@@ -57,9 +59,27 @@ class _QRViewExampleState extends State<QRViewExample> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Expanded(flex: 3, child: _buildQrView(context)),
             Expanded(
-              flex: 2,
+                flex: 1,
+                child: Column(
+                    children: <Widget>[
+                      const Text('Welcome',
+                          style: TextStyle(fontSize: 20)),
+                    ],
+                ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: <Widget>[
+                  const Text('2023/4/6 18:08',
+                      style: TextStyle(fontSize: 20)),
+                ],
+              ),
+            ),
+            Expanded(flex: 4, child: _buildQrView(context)),
+            Expanded(
+              flex: 4,
               child: FittedBox(
                 fit: BoxFit.contain,
                 child: Column(
@@ -69,7 +89,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                       Text(
                           'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                     else
-                      const Text('Scan a code'),
+                      const Text('QRコードを読み取らせてください'),
+                      //const Text('${now}'),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +105,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                               child: FutureBuilder(
                                 future: controller?.getFlashStatus(),
                                 builder: (context, snapshot) {
-                                  return Text('Flash: ${snapshot.data}');
+                                  return Text('登録',
+                                      style: TextStyle(fontSize: 20));
                                 },
                               )),
                         ),
@@ -100,7 +122,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                                 builder: (context, snapshot) {
                                   if (snapshot.data != null) {
                                     return Text(
-                                        'Camera facing ${describeEnum(snapshot.data!)}');
+                                        '見学',
+                                        style: TextStyle(fontSize: 20));
                                   } else {
                                     return const Text('loading');
                                   }
@@ -119,7 +142,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                             onPressed: () async {
                               await controller?.pauseCamera();
                             },
-                            child: const Text('pause',
+                            child: const Text('図書',
                                 style: TextStyle(fontSize: 20)),
                           ),
                         ),
@@ -129,7 +152,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                             onPressed: () async {
                               await controller?.resumeCamera();
                             },
-                            child: const Text('resume',
+                            child: const Text('管理',
                                 style: TextStyle(fontSize: 20)),
                           ),
                         )
@@ -192,8 +215,6 @@ class _QRViewExampleState extends State<QRViewExample> {
     super.dispose();
   }
 }
-
-
 
 /*import 'package:flutter/material.dart';
 import 'QRread.dart';
